@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2012 - 2013, S2H Mobile
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<resources>
+    
+    <!-- Settings -->
+    <string name="camera_title">Take Picture</string>
+    <string name="camera_summary">Launch camera when new location is set</string>
+    
+    <string name="routing_title">Directions</string>
+	<string name="routing_dialog">Directions</string>
+	
+	<string name="dialog_choose_carlib">Complete action using</string>	    
+    <string name="description_image_car">Picture of your car.</string>
+    
+	<!-- Widget -->
+    <string name="no_location">Location not set</string>
+    <string name="description_button_car">Saves the location of your car.</string>
+    <string name="description_button_map">Shows a map.</string>
+    
+    <!-- Detail activity -->
+    <!-- Context menu -->
+    <string name="header_picture">Picture</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
+    
+    <!-- Main menu -->
+    <string name="menu_directions">Directions</string>   
+    <string name="menu_picture">Take Picture</string>
+    
+    <!-- EditText -->
+    <string name="edit_text_loading">Encoding address &#8230;</string>   
+    <string name="edit_text_input">Please enter the address.</string>
+    	
+    <!-- Patterns and default values -->
+	<string name="routing_default">1</string>
+	<string name="pattern_date_short">M/d, K:mm a</string>
+	<string name="pattern_date_long">MMM d, K:mm a</string>
+	
+</resources>

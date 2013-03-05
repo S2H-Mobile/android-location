@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.s2hmobile.carlib"
+    android:versionCode="2"
+    android:versionName="1.1 Beta" >
+
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
+
+</manifest>
