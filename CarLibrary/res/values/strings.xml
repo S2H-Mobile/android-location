@@ -49,6 +49,6 @@
     <!-- Patterns and default values -->
 	<string name="routing_default">1</string>
 	<string name="pattern_date_short">M/d, K:mm a</string>
-	<string name="pattern_date_long">MMM d, K:mm a</string>
+	<string name="pattern_date_long">MMMMM d, K:mm a</string>
 	
 </resources>
