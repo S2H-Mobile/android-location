@@ -1,1 +1,0 @@
-Android library. Cointains helper classes to obtain the current location and save it to a shared preferences file.
