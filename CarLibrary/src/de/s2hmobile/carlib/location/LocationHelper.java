@@ -42,26 +42,26 @@ public class LocationHelper {
 	 * Checks if the caller implements the OnLocationListener interface. Asks for
 	 * the last best location. If it is not good enough, requests a single update.
 	 * @param context for the location system service
-	 * @param listener the service, must implement OnLocationUpdateListener
+	 * @param caller the service, must implement OnLocationUpdateListener
 	 */
-	public static void requestLocation(Context context, Service listener) {
-		OnLocationUpdateListener callback = null;
+	public static void requestLocation(Context context, Service caller) {
+		OnLocationUpdateListener listener = null;
 	    try {
-	  	  callback = (OnLocationUpdateListener) listener;
+	  	  listener = (OnLocationUpdateListener) caller;
 	    } catch(ClassCastException e) {
 	  	  android.util.Log.e("LocationHelper",
-	  			  "Service must implement OnLocationUpdateListener.", e);
+	  			  "Caller must implement OnLocationUpdateListener.", e);
 	    }
-	    if (callback != null) {
+	    if (listener != null) {
 			// determine the time limit
 			long limit = System.currentTimeMillis() - DEFAULT_TIME_LIMIT;
 			// ask for last best location
 			Location lastBestLocation = getLastBestLocation(context, limit);
 			// evaluate the result
 			if (isLocationAccepted(lastBestLocation, limit)){
-				callback.onLocationUpdate(lastBestLocation);
+				listener.onLocationUpdate(lastBestLocation);
 			} else {
-				ILocationFinder finder = createInstance(context, callback);
+				ILocationFinder finder = createInstance(context, listener);
 				finder.oneShotUpdate(lastBestLocation);
 			}
 	    }
@@ -153,10 +153,10 @@ public class LocationHelper {
    * @return ILocationFinder the instance of the ILocationFinder
    */
   private static ILocationFinder createInstance(Context context,
-		  OnLocationUpdateListener callback) {
+		  OnLocationUpdateListener listener) {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD ?
-    		new GingerbreadLocationFinder(context, callback) :
-    			new FroyoLocationFinder(context, callback);
+    		new GingerbreadLocationFinder(context, listener) :
+    			new FroyoLocationFinder(context, listener);
   }
   
   public interface OnLocationUpdateListener{

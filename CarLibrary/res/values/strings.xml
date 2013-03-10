@@ -17,6 +17,9 @@
 
 <resources>
     
+    <string name="title_activity_details">Your Parking Spot</string>
+    <string name="title_marker_car">Your Car</string>
+    
     <!-- Settings -->
     <string name="camera_title">Take Picture</string>
     <string name="camera_summary">Launch camera when new location is set</string>

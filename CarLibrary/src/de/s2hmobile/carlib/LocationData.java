@@ -47,7 +47,7 @@ public final class LocationData {
 	 * @param data the location data file
 	 * @return the Double array of coordinates, or (0,0) if nothing has been saved
 	 */
-    public static Double[] getCoordinates(SharedPreferences data) {
+    public static Double[] getPosition(SharedPreferences data) {
     	// read coordinates from prefs
         long lat = data.getLong(KEY_LAT, 0L),
         	 lng = data.getLong(KEY_LNG, 0L); 
@@ -57,11 +57,24 @@ public final class LocationData {
         Double[] coordinates = {latitude, longitude};   	
         return coordinates;
 	}
+
+    public static boolean putPosition(SharedPreferences data,
+    		double lat, double lng) {
+    	return data.edit()
+        		.remove(KEY_ADDRESS)
+        		.putLong(KEY_LAT, Double.doubleToLongBits(lat))
+    			.putLong(KEY_LNG, Double.doubleToLongBits(lng))
+    			.commit();
+    }
     
     public static long getTime(SharedPreferences data) {
     	return data.getLong(KEY_TIME, DEFAULT_TIME);
     }
-    
+
+    private static boolean putTime(SharedPreferences data, long time) {
+    	return data.edit().putLong(KEY_TIME, time).commit();
+    }
+
     /**
      * Returns the address of the parking spot, if one has been saved. There can be 
      * a saved location without an address.
@@ -72,7 +85,7 @@ public final class LocationData {
     	return data.getString(LocationData.KEY_ADDRESS, "");
     }
     
-    public static void saveAddress(SharedPreferences data, String address) {
+    public static void putAddress(SharedPreferences data, String address) {
     	data.edit().putString(KEY_ADDRESS, address).commit();
     }
     	    
@@ -86,15 +99,13 @@ public final class LocationData {
      * @param location the new location
      * @return true if refreshed successfully
      */
-    public static boolean refreshLocationData(SharedPreferences data,
+    public static boolean putLocation(SharedPreferences data,
     		Location location) {
         if (location != null) {
-        	return data.edit()
-        		.remove(KEY_ADDRESS)
-        		.putLong(KEY_LAT, Double.doubleToLongBits(location.getLatitude()))
-    			.putLong(KEY_LNG, Double.doubleToLongBits(location.getLongitude()))
-    			.putLong(KEY_TIME, location.getTime())
-    			.commit();
+        	double lat = location.getLatitude(),
+        		   lng = location.getLongitude();
+        	long time = location.getTime();
+        	return putPosition(data, lat, lng) && putTime(data, time);
         } else {
         	return false;
         }
