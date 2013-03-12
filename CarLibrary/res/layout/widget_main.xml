@@ -49,19 +49,13 @@
       
       </LinearLayout>
       
-      <TextView
-          android:id="@+id/text_widget"
+      <TextView android:id="@+id/text_widget"
+          style="@style/base_text_carlib"
           
           android:layout_height="wrap_content"
           android:layout_width="match_parent"
-    
-		  android:background="@color/background_transparent_carlib"		  
-          android:textColor="@color/color_text_carlib"
-		            
+              
           android:textIsSelectable="true"
-          android:ellipsize="end"
-          
-          android:padding="@dimen/padding_text_carlib"
-          android:textAppearance="?android:attr/textAppearanceMedium" />
+          android:ellipsize="end" />
 
 </LinearLayout>

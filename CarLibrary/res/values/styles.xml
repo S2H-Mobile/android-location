@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2013 S2H Mobile
+     Copyright (C) 2013, S2H Mobile
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,20 +16,21 @@
 -->
 
 <resources>
- 
-    <style name="stacked_text_carlib">
+    <style name="base_text_carlib">
+        <item name="android:padding">@dimen/padding_text_carlib</item>
+        <item name="android:textColor">@color/text_carlib</item>
+        <item name="android:background">@color/background_transparent_carlib</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>       
+	</style>
+        
+    <style name="stacked_text_carlib" parent="style/base_text_carlib">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/padding_text_carlib</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textColor">@color/color_text_carlib</item>
-        <item name="android:background">@color/background_transparent_carlib</item>
     </style>
     
     <style name="activity_dialog_carlib" parent="android:style/Theme.Dialog">
-        <item name="android:padding">@dimen/padding_text_carlib</item>        
-        <item name="android:textColor">@color/color_text_carlib</item>
+        <item name="android:padding">@dimen/padding_text_carlib</item>              
+        <item name="android:textColor">@color/text_carlib</item>
         <item name="android:background">@color/background_transparent_carlib</item>
     </style>
-    
 </resources>

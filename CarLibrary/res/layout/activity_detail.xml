@@ -20,18 +20,19 @@
    android:layout_height="match_parent" >
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-                
         android:id="@+id/image_car"
         android:src="@drawable/ic_action_image"
-        
+ 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+                             
         android:scaleType="center"
         android:contentDescription="@string/description_image_car" />
 
-    <EditText style="@style/stacked_text_carlib"
-        
-        android:id="@+id/text_address"
+    <EditText
+        android:id="@+id/text_address" 
+        style="@style/stacked_text_carlib"
+                
         android:inputType="textPostalAddress|textCapWords|textNoSuggestions"
         android:imeOptions="actionDone"
              
@@ -39,8 +40,9 @@
         android:layout_marginBottom="20dp" />
 
     <TextView
+        android:id="@+id/text_date"
         style="@style/stacked_text_carlib" 
-		android:id="@+id/text_date"
+		
 		android:textIsSelectable="true"
 		
         android:layout_gravity="top|right"

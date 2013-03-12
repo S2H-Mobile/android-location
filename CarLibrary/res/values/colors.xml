@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2013 S2H Mobile
+     Copyright (C) 2013, S2H Mobile
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 -->
 
 <resources>
-    <!-- for text stacked over images -->
-    <color name="color_text_carlib">#ff005761</color>    
+    <color name="actionbar_title_color">#ff005761</color>  
+    <color name="text_carlib">#ff005761</color>    
     <color name="background_transparent_carlib">#bbeeeeee</color>   
 </resources>
