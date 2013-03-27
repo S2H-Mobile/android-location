@@ -115,6 +115,7 @@ public class LocationHelper {
 			return newLocation;
 		}
 		// Check whether the new location fix is younger or older
+		// FIXME catch npe
 		final long allowedTimeDelta = 1000 * 60 * 2, // 2 minutes
 				timeDelta = newLocation.getTime() - currentBestLocation.getTime();
 		if (timeDelta > allowedTimeDelta) {

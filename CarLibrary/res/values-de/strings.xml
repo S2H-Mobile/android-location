@@ -18,7 +18,7 @@
 <resources>
          
     <string name="title_activity_details">Ihr Parkplatz</string>
-    <string name="title_marker_car">Ihr Auto</string>
+    <string name="title_marker_car">Ihr Fahrzeug</string>
   
     <!-- Settings -->
     <string name="camera_title">Foto aufnehmen</string>
