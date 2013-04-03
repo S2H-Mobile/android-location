@@ -24,6 +24,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 
+/**
+ * Collection of helper methods to determine location.
+ * 
+ * @author Stephan Hoehne
+ */
 public class LocationHelper {
 	
     /**
@@ -69,7 +74,8 @@ public class LocationHelper {
 	
 	/**
 	 * Find the most accurate and timely previously detected location 
-	 * using all the location providers.
+	 * using all the location providers. This method is derived from the
+	 * Location Best Practises project by Reto Meier.
 	 * @param context the context, to get the location manager
 	 * @param minTime the time limit
 	 * @return The most accurate and / or timely previously detected location.
@@ -113,40 +119,42 @@ public class LocationHelper {
 		if (currentBestLocation == null) {
 			// A new location is always better than no location
 			return newLocation;
+		} else if (newLocation == null) {
+			return currentBestLocation;
+		} else {
+			// compare the times of the location fixes
+			final long allowedTimeDelta = 1000 * 60 * 2, // 2 minutes
+					timeDelta = newLocation.getTime() - currentBestLocation.getTime();
+			if (timeDelta > allowedTimeDelta) {
+	    	   // newLocation is more than two minutes younger than current one, user has likely moved
+	           return newLocation;
+			} else if (timeDelta < -allowedTimeDelta) {
+	           // newLocation is more than two minutes older than current one
+	           return currentBestLocation;
+			}
+			// the location times are less than two minutes apart, compare the accuracies
+			final float accuracyDelta = newLocation.getAccuracy() - currentBestLocation.getAccuracy();
+			if (accuracyDelta < 0) {
+	    	   // the new location fix is more accurate than the current best fix     	   
+	           return newLocation;
+			} else if (timeDelta > 0 && !(accuracyDelta > ALLOWED_ACCURACY_DELTA)) {
+	    	   // candidate location is younger and not significantly less accurate
+	    	   return newLocation;
+			}
+			// candidate location is older or significantly less accurate
+			return currentBestLocation;
 		}
-		// Check whether the new location fix is younger or older
-		// FIXME catch npe
-		final long allowedTimeDelta = 1000 * 60 * 2, // 2 minutes
-				timeDelta = newLocation.getTime() - currentBestLocation.getTime();
-		if (timeDelta > allowedTimeDelta) {
-    	   // newLocation is more than two minutes younger than current one, user has likely moved
-           return newLocation;
-		} else if (timeDelta < -allowedTimeDelta) {
-           // newLocation is more than two minutes older than current one
-           return currentBestLocation;
-		}
-		// the location times are less than two minutes apart, compare the accuracies
-		final float accuracyDelta = newLocation.getAccuracy() - currentBestLocation.getAccuracy();
-		if (accuracyDelta < 0) {
-    	   // the new location fix is more accurate than the current best fix     	   
-           return newLocation;
-		} else if (timeDelta > 0 && !(accuracyDelta > ALLOWED_ACCURACY_DELTA)) {
-    	   // candidate location is younger and not significantly less accurate
-    	   return newLocation;
-		}
-		// candidate location is older or significantly less accurate
-		return currentBestLocation;
 	}
 
-	private static boolean isLocationAccepted(Location location, long minTime){
-		if (location != null){
-			long time = location.getTime();
-	 		float accuracy = location.getAccuracy();
-	  	    return time > minTime && accuracy < ALLOWED_ACCURACY_DELTA;
-		} else {
-			return false;
-		}
+  private static boolean isLocationAccepted(Location location, long minTime){
+    if (location != null){
+	  long time = location.getTime();
+      float accuracy = location.getAccuracy();
+	  return time > minTime && accuracy < ALLOWED_ACCURACY_DELTA;
+	} else {
+	  return false;
 	}
+  }
 	
   /**
    * Wraps the LocationFinder instance, depending on platform version.
@@ -160,6 +168,10 @@ public class LocationHelper {
     			new FroyoLocationFinder(context, listener);
   }
   
+  /**
+   * 
+   * @author Stephan Hoehne
+   */
   public interface OnLocationUpdateListener{
     /**
      * Handle the result of the location update.

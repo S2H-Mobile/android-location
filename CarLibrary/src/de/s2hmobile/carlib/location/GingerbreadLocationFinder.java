@@ -33,9 +33,12 @@ import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
  * and above.
  */
 public class GingerbreadLocationFinder implements ILocationFinder {
-	
-  private static final String ACTION_UPDATE_LOCATION =
-		  "de.s2hmobile.tools.location.ACTION_UPDATE_LOCATION";
+
+  /**
+   * Intent action to update the user location.
+   */
+  private static final String ACTION_UPDATE_LOCATION = 
+    GingerbreadLocationFinder.class.getPackage().getName() + ".ACTION_UPDATE_LOCATION";
  
   private final Context mContext;
   private final LocationManager mLocationManager;
@@ -79,7 +82,7 @@ public class GingerbreadLocationFinder implements ILocationFinder {
 	      		new Intent(ACTION_UPDATE_LOCATION),
 	      		PendingIntent.FLAG_UPDATE_CURRENT);
 	  mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-}
+  }
 
   /**
    * {@inheritDoc}
