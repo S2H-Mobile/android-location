@@ -26,68 +26,76 @@ import android.os.Bundle;
 import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
 
 public class FroyoLocationFinder implements ILocationFinder {
-  private final Context mContext;
-  private final LocationManager mLocationManager;
-  private final OnLocationUpdateListener mCallback;
-  
-  private Location mCurrentLocation = null;
-  
-  /**
-   * This one-off {@link LocationListener} simply listens for a single location
-   * update before unregistering itself.
-   * The one-off location update is returned via the {@link LocationListener}
-   * specified in {@link setChangedLocationListener}.
-   */
-  protected LocationListener singleUpdateListener = new LocationListener() {
-	  
-    public void onLocationChanged(Location newLocation) {
-      // release resources by removing updates
-      FroyoLocationFinder.this.cancel(); 
-      // evaluate update
-      if (mCallback != null){
-    	Location betterLocation =
-    			LocationHelper.betterLocation(newLocation, mCurrentLocation);
-        mCallback.onLocationUpdate(betterLocation);
-      }      
-    }
- 
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-    public void onProviderEnabled(String provider) {}    
-    public void onProviderDisabled(String provider) {}
-  };
+	private final Context mContext;
+	private final LocationManager mLocationManager;
+	private final OnLocationUpdateListener mCallback;
 
-  /**
-   * Construct a new FroyoLocationFinder.
-   * @param context for the system service and to get the main looper
-   */
-  FroyoLocationFinder(Context context, OnLocationUpdateListener callback) {
-    mContext = context;
-    mCallback = callback;
-    mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void oneShotUpdate(Location currentBestLocation) {
-	// the current location, for the receiver to compare it to the new one
-	mCurrentLocation = currentBestLocation;
-  	// define the criteria and the best provider for the location update
-	Criteria criteria = new Criteria();
-	criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-	String provider = mLocationManager.getBestProvider(criteria, true);
-	if (provider != null){
-	  // request the location update
-	  mLocationManager.requestLocationUpdates(provider, 0, 0,
-			  singleUpdateListener, mContext.getMainLooper());
+	private Location mCurrentLocation = null;
+
+	/**
+	 * This one-off {@link LocationListener} simply listens for a single
+	 * location update before unregistering itself. The one-off location update
+	 * is returned via the {@link LocationListener} specified in
+	 * {@link setChangedLocationListener}.
+	 */
+	protected LocationListener singleUpdateListener = new LocationListener() {
+
+		public void onLocationChanged(Location newLocation) {
+			// release resources by removing updates
+			FroyoLocationFinder.this.cancel();
+			// evaluate update
+			if (mCallback != null) {
+				Location betterLocation = LocationHelper.betterLocation(
+						newLocation, mCurrentLocation);
+				mCallback.onLocationUpdate(betterLocation);
+			}
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onProviderDisabled(String provider) {
+		}
+	};
+
+	/**
+	 * Construct a new FroyoLocationFinder.
+	 * 
+	 * @param context
+	 *            for the system service and to get the main looper
+	 */
+	FroyoLocationFinder(Context context, OnLocationUpdateListener callback) {
+		mContext = context;
+		mCallback = callback;
+		mLocationManager = (LocationManager) context
+				.getSystemService(Context.LOCATION_SERVICE);
 	}
-  }
- 
-  /**
-   * {@inheritDoc}
-   */
-  public void cancel() {
-    mLocationManager.removeUpdates(singleUpdateListener);
-  }
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void oneShotUpdate(Location currentBestLocation) {
+		// the current location, for the receiver to compare it to the new one
+		mCurrentLocation = currentBestLocation;
+		// define the criteria and the best provider for the location update
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+		String provider = mLocationManager.getBestProvider(criteria, true);
+		if (provider != null) {
+			// request the location update
+			mLocationManager.requestLocationUpdates(provider, 0, 0,
+					singleUpdateListener, mContext.getMainLooper());
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void cancel() {
+		mLocationManager.removeUpdates(singleUpdateListener);
+	}
 }

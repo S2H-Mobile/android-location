@@ -20,28 +20,32 @@ package de.s2hmobile.carlib.location;
 import android.location.Location;
 
 /**
- * Interface definition for a Last Location Finder. 
+ * Interface definition for a Last Location Finder.
  * 
- * Classes that implement this interface must provide methods to 
- * find the "best" (most accurate and timely) previously detected
- * location using whatever providers are available. 
+ * Classes that implement this interface must provide methods to find the "best"
+ * (most accurate and timely) previously detected location using whatever
+ * providers are available.
  * 
- * Where a timely / accurate previous location is not detected, classes
- * should return the last location and create a one-shot update to find
- * the current location. The one-shot update should be returned via the
- * Location Listener passed in through setChangedLocationListener.
+ * Where a timely / accurate previous location is not detected, classes should
+ * return the last location and create a one-shot update to find the current
+ * location. The one-shot update should be returned via the Location Listener
+ * passed in through setChangedLocationListener.
  */
-public interface ILocationFinder {  
-	
-  /**
-   * create a one-shot update of the current location fix
-   * @param listener the listener that may receive a one-shot current location update
-   * @param currentBestLocation the current best fix
-   */
-  public void oneShotUpdate(Location currentBestLocation);  
-  
-  /**
-   * Cancel the one-shot current location update.
-   */
-  public void cancel();
+public interface ILocationFinder {
+
+	/**
+	 * create a one-shot update of the current location fix
+	 * 
+	 * @param listener
+	 *            the listener that may receive a one-shot current location
+	 *            update
+	 * @param currentBestLocation
+	 *            the current best fix
+	 */
+	public void oneShotUpdate(Location currentBestLocation);
+
+	/**
+	 * Cancel the one-shot current location update.
+	 */
+	public void cancel();
 }
