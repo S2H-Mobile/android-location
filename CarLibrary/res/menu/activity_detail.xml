@@ -28,5 +28,11 @@
         android:icon="@drawable/ic_action_directions"
         android:orderInCategory="1"
         android:showAsAction="always" />
+    
+    <item android:id="@+id/menu_activity"
+        android:title="Activity Recognition"
+        android:icon="@drawable/ic_action_detect_activity"
+        android:orderInCategory="2"
+        android:showAsAction="always" />
              
 </menu>

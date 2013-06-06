@@ -11,13 +11,13 @@ import android.location.Geocoder;
 public class ReverseGeocodingTask extends AsyncTask<Double, Void, String> {
 	private static final int MAX_RESULTS = 1;
 
-	private OnAddressEncodedListener mCallback = null;
+	private OnAddressUpdatedListener mCallback = null;
 
 	private final Context mContext;
 
 	public ReverseGeocodingTask(Activity activity, Context context) {
 		try {
-			mCallback = (OnAddressEncodedListener) activity;
+			mCallback = (OnAddressUpdatedListener) activity;
 		} catch (ClassCastException e) {
 			android.util.Log.e("ReverseGeocodingTask",
 					"Caller must implement OnAddressEncodedListener.", e);
@@ -52,11 +52,9 @@ public class ReverseGeocodingTask extends AsyncTask<Double, Void, String> {
 			address = null;
 		}
 		if (address != null && mCallback != null) {
-			mCallback.onAddressEncoded(address);
+			mCallback.onAddressUpdated(address);
 		}
 	}
 
-	public interface OnAddressEncodedListener {
-		void onAddressEncoded(String address);
-	}
+	
 }

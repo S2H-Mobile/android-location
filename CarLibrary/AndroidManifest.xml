@@ -3,6 +3,8 @@
     android:versionCode="2"
     android:versionName="1.1 Beta" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
 
 </manifest>
