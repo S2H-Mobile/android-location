@@ -16,16 +16,14 @@
 
 package de.s2hmobile.carlib.async;
 
-import java.lang.ref.WeakReference;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
-public class BitmapFileTask extends AsyncTask<Integer, Void, Bitmap> {
-	private OnBitmapRenderedListener mCallback = null;
+public class BitmapFileTask extends BitmapBaseTask {
 
-	private final WeakReference<ImageView> imageViewReference;
+	private final OnBitmapRenderedListener mCallback;
+
 	private final String mPath;
 
 	/**
@@ -38,20 +36,17 @@ public class BitmapFileTask extends AsyncTask<Integer, Void, Bitmap> {
 	 * @param imageView
 	 *            the host view
 	 */
-	public BitmapFileTask(Object caller, String path, ImageView imageView) {
-		try {
-			mCallback = (OnBitmapRenderedListener) caller;
-		} catch (ClassCastException e) {
-			android.util.Log.e("BitmapFileTask",
-					"Caller must implement OnBitmapRenderedListener.", e);
-		}
+	public BitmapFileTask(OnBitmapRenderedListener listener, String path,
+			ImageView imageView) {
+		super(imageView);
+		mCallback = listener;
 		mPath = path;
-		imageViewReference = new WeakReference<ImageView>(imageView);
 	}
 
 	@Override
 	protected Bitmap doInBackground(Integer... params) {
-		final int width = params[0], height = params[1];
+		final int width = params[0];
+		final int height = params[1];
 		return decodeBitmapFromFile(mPath, width, height);
 	}
 
@@ -60,37 +55,33 @@ public class BitmapFileTask extends AsyncTask<Integer, Void, Bitmap> {
 		if (super.isCancelled()) {
 			bitmap = null;
 		}
-		if (imageViewReference != null && bitmap != null && mCallback != null) {
-			ImageView imageView = imageViewReference.get();
+		if (mViewReference != null && bitmap != null && mCallback != null) {
+			final ImageView imageView = mViewReference.get();
 			if (imageView != null) {
 				mCallback.onBitmapRendered(imageView, bitmap);
 			}
 		}
 	}
 
-	private static Bitmap decodeBitmapFromFile(String path, int targetWidth,
-			int targetHeight) {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		// read the dimensions and type of the image data prior to construction
-		// (and memory allocation) of the bitmap
+	private static Bitmap decodeBitmapFromFile(final String path,
+			final int targetWidth, final int targetHeight) {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+
+		/*
+		 * Read the dimensions of the source image prior to construction (and
+		 * memory allocation) of the target bitmap.
+		 */
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(path, options);
-		int imageWidth = options.outWidth, imageHeight = options.outHeight;
-		// determine the scaling factor, scale down only
-		int scaleFactor = 2, realFactor = 1;
-		if (targetWidth != 0 && targetHeight != 0
-				&& (imageHeight > targetHeight || imageWidth > targetWidth)) {
-			realFactor = Math.min(imageWidth / targetWidth, imageHeight
-					/ targetHeight);
-		}
-		// TODO this is probably not necessary, the scale factor will be a power
-		// of two anyway
-		while (scaleFactor <= realFactor) {
-			scaleFactor *= 2;
-		}
+
+		// raw height and width of image
+		final int imageWidth = options.outWidth;
+		final int imageHeight = options.outHeight;
+
 		// decode the image file into a bitmap
 		options.inJustDecodeBounds = false;
-		options.inSampleSize = scaleFactor / 2;
+		options.inSampleSize = calculateInSampleSize(imageHeight, imageWidth,
+				targetHeight, targetWidth);
 		options.inPurgeable = true;
 		return BitmapFactory.decodeFile(path, options);
 	}

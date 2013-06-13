@@ -17,18 +17,12 @@
 
 package de.s2hmobile.carlib.async;
 
-import android.annotation.TargetApi;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Process;
-
 import java.util.ArrayDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,8 +33,13 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class AsyncTask<Params, Progress, Result> {
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Process;
 
+public abstract class AsyncTask<Params, Progress, Result> {
 	private static final int CORE_POOL_SIZE = 5;
 	private static final int MAXIMUM_POOL_SIZE = 128;
 	private static final int KEEP_ALIVE = 1;
@@ -88,7 +87,7 @@ public abstract class AsyncTask<Params, Progress, Result> {
 	private final AtomicBoolean mCancelled = new AtomicBoolean();
 	private final AtomicBoolean mTaskInvoked = new AtomicBoolean();
 
-	@TargetApi(11)
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private static class SerialExecutor implements Executor {
 		final ArrayDeque<Runnable> mTasks = new ArrayDeque<Runnable>();
 		Runnable mActive;
@@ -154,7 +153,6 @@ public abstract class AsyncTask<Params, Progress, Result> {
 				mTaskInvoked.set(true);
 
 				Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-				// noinspection unchecked
 				return postResult(doInBackground(mParams));
 			}
 		};

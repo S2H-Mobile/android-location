@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright 2012 S2H Mobile
+  Copyright 2012 - 2013, S2H Mobile
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,16 +13,15 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
-        android:id   ="@+id/item_share"
-        android:title="@string/menu_share" />
-    
+        android:id="@+id/item_share"
+        android:title="@string/menu_share"/>
     <item
-        android:id   ="@+id/item_delete"
-        android:title="@string/menu_delete" />
-  
+        android:id="@+id/item_delete"
+        android:title="@string/menu_delete"/>
+
 </menu>

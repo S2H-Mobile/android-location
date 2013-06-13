@@ -24,13 +24,34 @@ import android.os.Environment;
 import android.widget.ImageView;
 import de.s2hmobile.carlib.async.AsyncTask;
 import de.s2hmobile.carlib.async.BitmapFileTask;
+import de.s2hmobile.carlib.async.OnBitmapRenderedListener;
 
-public class ImageFileHandler {
+public final class ImageFileHandler {
 
 	// cache the file handler
 	private static File sFile = null;
 
 	private ImageFileHandler() {
+	}
+
+	public static boolean deleteImageFile(String name) {
+		boolean isDeleted = false;
+		try {
+			isDeleted = ImageFileHandler.getFile(name).delete();
+		} catch (IOException e) {
+			handleException(e);
+		}
+		return isDeleted;
+	}
+
+	public static Uri getFileUri(String name) {
+		Uri result = null;
+		try {
+			result = Uri.fromFile(ImageFileHandler.getFile(name));
+		} catch (IOException e) {
+			handleException(e);
+		}
+		return result;
 	}
 
 	/**
@@ -47,41 +68,20 @@ public class ImageFileHandler {
 	 * @param height
 	 *            the height of the target bitmap
 	 */
-	public static void loadBitmap(Object caller, String fileName,
-			ImageView view, int width, int height) {
-		// public static void loadBitmap<T extends OnBitmapRenderedListener> ()
+	public static void loadBitmap(OnBitmapRenderedListener listener,
+			String fileName, ImageView view, final int width, final int height) {
 		File file = null;
 		try {
-			file = ImageFileHandler.getFile(fileName);
+			file = getFile(fileName);
 		} catch (IOException e) {
 			handleException(e);
 		}
 		if (file != null && file.exists()) {
-			final BitmapFileTask task = new BitmapFileTask(caller,
+			final BitmapFileTask task = new BitmapFileTask(listener,
 					file.getAbsolutePath(), view);
 			final Integer[] params = { width, height };
 			task.executeOnExecutor(AsyncTask.DUAL_THREAD_EXECUTOR, params);
 		}
-	}
-
-	public static Uri getFileUri(String name) {
-		Uri result = null;
-		try {
-			result = Uri.fromFile(ImageFileHandler.getFile(name));
-		} catch (IOException e) {
-			handleException(e);
-		}
-		return result;
-	}
-
-	public static boolean deleteImageFile(String name) {
-		boolean isDeleted = false;
-		try {
-			isDeleted = ImageFileHandler.getFile(name).delete();
-		} catch (IOException e) {
-			handleException(e);
-		}
-		return isDeleted;
 	}
 
 	private static File getFile(String name) throws IOException {
@@ -99,13 +99,13 @@ public class ImageFileHandler {
 		return sFile;
 	}
 
-	private static boolean isExternalStorageWritable() {
-		String state = Environment.getExternalStorageState();
-		return Environment.MEDIA_MOUNTED.equals(state);
-	}
-
 	private static void handleException(IOException e) {
 		android.util.Log.e("ImageFileHandler",
 				"IOException occured while handling file.", e);
+	}
+
+	private static boolean isExternalStorageWritable() {
+		final String state = Environment.getExternalStorageState();
+		return Environment.MEDIA_MOUNTED.equals(state);
 	}
 }
