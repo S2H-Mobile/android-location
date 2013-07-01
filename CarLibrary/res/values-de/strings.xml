@@ -36,8 +36,10 @@
     <!-- Detail activity -->
     <!-- Context menu -->
     <string name="header_picture">Foto</string>
+    <string name="header_date">Timer</string>
     <string name="menu_share">Teilen</string>
     <string name="menu_delete">"Löschen"</string>
+    <string name="menu_timer">"an Parkzeitende erinnern"</string>
 
     <!-- Main menu -->
     <string name="menu_directions">Navigation</string>

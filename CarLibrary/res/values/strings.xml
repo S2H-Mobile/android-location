@@ -36,8 +36,10 @@
     <!-- Detail activity -->
     <!-- Context menu -->
     <string name="header_picture">Picture</string>
+    <string name="header_date">Timer</string>
     <string name="menu_share">Share</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_timer">remind me</string>
 
     <!-- Main menu -->
     <string name="menu_directions">Directions</string>
@@ -49,5 +51,7 @@
 
     <!-- Default values -->
     <string name="routing_default">1</string>
+    <string name="key_routing">pref_routing</string>
+    <string name="key_camera">pref_camera</string>
 
 </resources>

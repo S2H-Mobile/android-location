@@ -29,7 +29,8 @@ public final class LocationData {
 	/**
 	 * Keys for location data file.
 	 */
-	private static final String KEY_ADDRESS = "pref_address",
+	private static final String KEY_ADDRESS = "pref_address";
+	private static final String 
 			KEY_TIME = "pref_time", KEY_LAT = "pref_lat", KEY_LNG = "pref_lng";
 
 	/**
@@ -47,17 +48,20 @@ public final class LocationData {
 	 * Reads the location data from the preferences file.
 	 * 
 	 * @param data
-	 *            the location data file
-	 * @return the Double array of coordinates, or (0,0) if nothing has been
-	 *         saved
+	 *            - the location data file
+	 * @return The coordinate array or (0,0) if nothing has been
+	 *         saved.
 	 */
 	public static Double[] getPosition(SharedPreferences data) {
-		// read coordinates from prefs
-		long lat = data.getLong(KEY_LAT, 0L), lng = data.getLong(KEY_LNG, 0L);
+		
+		// read coordinates from data file
+		final long lat = data.getLong(KEY_LAT, 0L);
+		final long lng = data.getLong(KEY_LNG, 0L);
+		
 		// convert to double and initialize the array
 		double latitude = Double.longBitsToDouble(lat), longitude = Double
 				.longBitsToDouble(lng);
-		Double[] coordinates = { latitude, longitude };
+		final Double[] coordinates = { latitude, longitude };
 		return coordinates;
 	}
 

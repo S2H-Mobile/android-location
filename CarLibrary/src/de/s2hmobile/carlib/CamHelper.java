@@ -18,7 +18,9 @@ package de.s2hmobile.carlib;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 
 public class CamHelper {
@@ -27,6 +29,25 @@ public class CamHelper {
 
 	private CamHelper() {
 	}
+	
+	/**
+	 * Checks if the user has opted to take pictures.
+	 * 
+	 * @param context
+	 *            the application context
+	 * @return true if taking pictures is enabled
+	 */
+	public static boolean isCameraEnabled(Context context) {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		final String key = context.getResources()
+				.getString(R.string.key_camera);
+		boolean defValue = context.getResources().getBoolean(
+				R.bool.pref_camera_default);
+		return prefs.getBoolean(key, defValue);
+	}
+
 
 	public static Intent takePicture(Context context, String fileName) {
 		Intent intent = null;

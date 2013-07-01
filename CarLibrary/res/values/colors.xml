@@ -16,7 +16,6 @@
 -->
 
 <resources>
-    <color name="actionbar_title_color">#ff005761</color>  
     <color name="text_carlib">#ff005761</color>    
     <color name="background_transparent_carlib">#bbeeeeee</color>   
 </resources>
