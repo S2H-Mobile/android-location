@@ -29,8 +29,8 @@
     </style>
     
     <style name="activity_dialog_carlib" parent="android:style/Theme.Dialog">
-        <item name="android:padding">@dimen/padding_text_carlib</item>              
         <item name="android:textColor">@color/text_carlib</item>
+        <item name="android:background">@color/background_transparent_carlib</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>   
     </style>
 </resources>

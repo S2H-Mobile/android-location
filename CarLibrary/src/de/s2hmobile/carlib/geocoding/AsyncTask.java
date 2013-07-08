@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package de.s2hmobile.carlib.async;
+package de.s2hmobile.carlib.geocoding;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.BlockingQueue;

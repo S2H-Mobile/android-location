@@ -118,8 +118,7 @@ public final class IntentHelper {
 			}
 		}
 
-		if (IntentHelper.isIntentSafe(context, intent,
-				PackageManager.MATCH_DEFAULT_ONLY)) {
+		if (IntentHelper.isIntentSafe(context, intent)) {
 
 			// the app is installed, so return the intent
 			IntentHelper.addFlags(intent);
@@ -143,10 +142,10 @@ public final class IntentHelper {
 	 * @return true if there is at least one activity that can handle the intent
 	 */
 	public static final boolean isIntentSafe(final Context context,
-			final Intent intent, final int flag) {
+			final Intent intent) {
 		final PackageManager pm = context.getPackageManager();
 		final List<ResolveInfo> activities = pm.queryIntentActivities(intent,
-				flag);
+				PackageManager.MATCH_DEFAULT_ONLY);
 		return activities.size() > 0;
 	}
 
@@ -195,7 +194,7 @@ public final class IntentHelper {
 		Intent intent = openGooglePlayApp(builder);
 
 		// check if Google Play Store is installed
-		if (!isIntentSafe(context, intent, PackageManager.MATCH_DEFAULT_ONLY)) {
+		if (!isIntentSafe(context, intent)) {
 
 			// reassign the intent to launch the Google Play website
 			intent = openGooglePlayBrowser(builder);

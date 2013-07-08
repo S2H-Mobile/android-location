@@ -16,20 +16,23 @@
 
 package de.s2hmobile.carlib;
 
+import java.io.File;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 
 public class CamHelper {
 
-	public static final int REQ_TAKE_PICTURE = 1;
+	public static final int REQ_TAKE_PICTURE = 0x100;
 
 	private CamHelper() {
 	}
-	
+
 	/**
 	 * Checks if the user has opted to take pictures.
 	 * 
@@ -48,22 +51,21 @@ public class CamHelper {
 		return prefs.getBoolean(key, defValue);
 	}
 
-
-	public static Intent takePicture(Context context, String fileName) {
-		Intent intent = null;
+	public static Intent takePicture(Context context, File file) {
 		if (hasCamera(context)) {
-			intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			int flag = PackageManager.MATCH_DEFAULT_ONLY;
-			if (IntentHelper.isIntentSafe(context, intent, flag)) {
-				android.net.Uri uri = ImageFileHandler.getFileUri(fileName);
+			final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			if (IntentHelper.isIntentSafe(context, intent)) {
+				final Uri uri = Uri.fromFile(file);
 				if (uri != null) {
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 				}
+				return intent;
 			} else {
-				intent = null;
+				return null;
 			}
+		} else {
+			return null;
 		}
-		return intent;
 	}
 
 	private static boolean hasCamera(Context context) {

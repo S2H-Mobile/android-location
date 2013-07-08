@@ -1,4 +1,4 @@
-package de.s2hmobile.carlib.async;
+package de.s2hmobile.carlib.geocoding;
 
 import java.util.List;
 import java.util.Locale;

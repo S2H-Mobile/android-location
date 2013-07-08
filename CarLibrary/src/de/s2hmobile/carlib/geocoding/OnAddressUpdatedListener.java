@@ -1,4 +1,4 @@
-package de.s2hmobile.carlib.async;
+package de.s2hmobile.carlib.geocoding;
 
 public interface OnAddressUpdatedListener {
 	public void onAddressUpdated(String message);

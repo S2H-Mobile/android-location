@@ -12,7 +12,7 @@
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
-  limitations under the License.
+  limitations under the License.
 -->
 
 <resources>
@@ -28,16 +28,6 @@
         <item>1</item>
         <item>2</item>
         <item>3</item>
-    </string-array>
-    <string-array name="content_overlays_entries">
-        <item>Your Car</item>
-        <item>Parking Spots</item>
-        <item>Flinc Rides</item>
-    </string-array>
-    <string-array name="content_overlays_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
     </string-array>
 
 </resources>
