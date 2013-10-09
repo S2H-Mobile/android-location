@@ -19,65 +19,32 @@ package de.s2hmobile.carlib;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+/**
+ * Provides static access to a data file containing a location.
+ * 
+ * @author Stephan Hoehne
+ */
 public final class LocationData {
+
+	private static final long DEFAULT_TIME = Long.MIN_VALUE;
+
+	/** Key for saving the address of the car loaction in the data file. */
+	private static final String KEY_ADDRESS = "pref_address";
+
+	/** Key for saving the latitude of the car location in the data file. */
+	private static final String KEY_LAT = "pref_lat";
+
+	/** Key for saving the longitude of the car location in the data file. */
+	private static final String KEY_LNG = "pref_lng";
+
+	/** Key for saving the timestamp in the data file. */
+	private static final String KEY_TIME = "pref_time";
 
 	private LocationData() {
 	}
 
-	private static final long DEFAULT_TIME = Long.MIN_VALUE;
-
-	/**
-	 * Keys for location data file.
-	 */
-	private static final String KEY_ADDRESS = "pref_address";
-	private static final String 
-			KEY_TIME = "pref_time", KEY_LAT = "pref_lat", KEY_LNG = "pref_lng";
-
-	/**
-	 * Checks if a location is saved.
-	 * 
-	 * @param data
-	 *            the location data file
-	 * @return true if a saved location exists, false otherwise
-	 */
-	public static boolean isLocationSaved(SharedPreferences data) {
-		return getTime(data) != DEFAULT_TIME;
-	}
-
-	/**
-	 * Reads the location data from the preferences file.
-	 * 
-	 * @param data
-	 *            - the location data file
-	 * @return The coordinate array or (0,0) if nothing has been
-	 *         saved.
-	 */
-	public static Double[] getPosition(SharedPreferences data) {
-		
-		// read coordinates from data file
-		final long lat = data.getLong(KEY_LAT, 0L);
-		final long lng = data.getLong(KEY_LNG, 0L);
-		
-		// convert to double and initialize the array
-		double latitude = Double.longBitsToDouble(lat), longitude = Double
-				.longBitsToDouble(lng);
-		final Double[] coordinates = { latitude, longitude };
-		return coordinates;
-	}
-
-	public static boolean putPosition(SharedPreferences data, double lat,
-			double lng) {
-		return data.edit().remove(KEY_ADDRESS)
-				.putLong(KEY_LAT, Double.doubleToLongBits(lat))
-				.putLong(KEY_LNG, Double.doubleToLongBits(lng)).commit();
-	}
-
-	public static long getTime(SharedPreferences data) {
-		return data.getLong(KEY_TIME, DEFAULT_TIME);
-	}
-
-	private static boolean putTime(SharedPreferences data, long time) {
-		return data.edit().putLong(KEY_TIME, time).commit();
+	public static void clearLocationDataFile(final SharedPreferences data) {
+		data.edit().clear().commit();
 	}
 
 	/**
@@ -88,16 +55,49 @@ public final class LocationData {
 	 *            the location data file
 	 * @return the saved address, or an empty string
 	 */
-	public static String getAddress(SharedPreferences data) {
+	public static String getAddress(final SharedPreferences data) {
 		return data.getString(LocationData.KEY_ADDRESS, "");
 	}
 
-	public static void putAddress(SharedPreferences data, String address) {
-		data.edit().putString(KEY_ADDRESS, address).commit();
+	/**
+	 * Reads the location data from the preferences file.
+	 * 
+	 * @param data
+	 *            - the location data file
+	 * @return The coordinate array or (0,0) if nothing has been saved.
+	 */
+	public static Double[] getPosition(final SharedPreferences data) {
+
+		// read coordinates from data file
+		final long lat = data.getLong(KEY_LAT, 0L);
+		final long lng = data.getLong(KEY_LNG, 0L);
+
+		// convert to double and initialize the array
+		final double latitude = Double.longBitsToDouble(lat);
+		final double longitude = Double.longBitsToDouble(lng);
+
+		final Double[] coordinates = { latitude, longitude };
+		return coordinates;
 	}
 
-	public static void clearLocationDataFile(SharedPreferences data) {
-		data.edit().clear().commit();
+	public static long getTime(final SharedPreferences data) {
+		return data.getLong(KEY_TIME, DEFAULT_TIME);
+	}
+
+	/**
+	 * Checks if a location is saved.
+	 * 
+	 * @param data
+	 *            - the location data file
+	 * @return True if a saved location exists, false otherwise.
+	 */
+	public static boolean isLocationSaved(final SharedPreferences data) {
+		return getTime(data) != DEFAULT_TIME;
+	}
+
+	public static void putAddress(final SharedPreferences data,
+			final String address) {
+		data.edit().putString(KEY_ADDRESS, address).commit();
 	}
 
 	/**
@@ -108,13 +108,26 @@ public final class LocationData {
 	 *            the new location
 	 * @return true if refreshed successfully
 	 */
-	public static boolean putLocation(SharedPreferences data, Location location) {
+	public static boolean putLocation(final SharedPreferences data,
+			final Location location) {
 		if (location != null) {
-			double lat = location.getLatitude(), lng = location.getLongitude();
-			long time = location.getTime();
+			final double lat = location.getLatitude(), lng = location
+					.getLongitude();
+			final long time = location.getTime();
 			return putPosition(data, lat, lng) && putTime(data, time);
 		} else {
 			return false;
 		}
+	}
+
+	public static boolean putPosition(final SharedPreferences data,
+			final double lat, final double lng) {
+		return data.edit().remove(KEY_ADDRESS)
+				.putLong(KEY_LAT, Double.doubleToLongBits(lat))
+				.putLong(KEY_LNG, Double.doubleToLongBits(lng)).commit();
+	}
+
+	private static boolean putTime(final SharedPreferences data, final long time) {
+		return data.edit().putLong(KEY_TIME, time).commit();
 	}
 }

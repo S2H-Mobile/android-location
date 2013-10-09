@@ -19,6 +19,7 @@
 
     <string name="title_activity_details">Ihr Parkplatz</string>
     <string name="title_marker_car">Ihr Fahrzeug</string>
+    <string name="warn_location">Aktueller Standort nicht verfügbar.</string>
 
     <!-- Settings -->
     <string name="camera_title">Foto aufnehmen</string>
@@ -36,14 +37,14 @@
     <!-- Detail activity -->
     <!-- Context menu -->
     <string name="header_picture">Foto</string>
-    <string name="header_date">Timer</string>
-    <string name="menu_share">Teilen</string>
-    <string name="menu_delete">"Löschen"</string>
-    <string name="menu_timer">"an Parkzeitende erinnern"</string>
+    <string name="context_share">Teilen</string>
+    <string name="context_delete">"Löschen"</string>
 
     <!-- Main menu -->
     <string name="menu_directions">Navigation</string>
     <string name="menu_picture">Foto aufnehmen</string>
+    <string name="menu_delete">Standort entfernen</string>
+    <string name="menu_settings">Einstellungen</string>
 
     <!-- EditText -->
     <string name="edit_text_loading">Adresse wird berechnet &#8230;</string>

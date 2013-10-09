@@ -1,4 +1,4 @@
-/*  File modified by S2H Mobile, 2012.
+/*  File modified by S2H Mobile, 2012 - 2013.
  * 
  * Copyright 2011 Google Inc.
  *
@@ -21,43 +21,43 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
 
-public class FroyoLocationFinder implements ILocationFinder {
-	private final Context mContext;
-	private final LocationManager mLocationManager;
-	private final OnLocationUpdateListener mCallback;
-
-	private Location mCurrentLocation = null;
+public class FroyoLocationFinder extends LocationFinderBase {
 
 	/**
 	 * This one-off {@link LocationListener} simply listens for a single
 	 * location update before unregistering itself. The one-off location update
-	 * is returned via the {@link LocationListener} specified in
-	 * {@link setChangedLocationListener}.
+	 * is returned via the {@link LocationListener}.
 	 */
-	protected LocationListener singleUpdateListener = new LocationListener() {
+	private final LocationListener mSingleUpdateListener = new LocationListener() {
 
-		public void onLocationChanged(Location newLocation) {
-			// release resources by removing updates
-			FroyoLocationFinder.this.cancel();
+		@Override
+		public void onLocationChanged(final Location newLocation) {
+
+			// release resources
+			cancel();
+
 			// evaluate update
 			if (mCallback != null) {
-				Location betterLocation = LocationHelper.betterLocation(
-						newLocation, mCurrentLocation);
+				final Location betterLocation = LocationFinderBase
+						.betterLocation(newLocation, mCurrentLocation);
 				mCallback.onLocationUpdate(betterLocation);
 			}
 		}
 
-		public void onStatusChanged(String provider, int status, Bundle extras) {
+		@Override
+		public void onProviderDisabled(final String provider) {
 		}
 
-		public void onProviderEnabled(String provider) {
+		@Override
+		public void onProviderEnabled(final String provider) {
 		}
 
-		public void onProviderDisabled(String provider) {
+		@Override
+		public void onStatusChanged(final String provider, final int status,
+				final Bundle extras) {
 		}
 	};
 
@@ -65,37 +65,30 @@ public class FroyoLocationFinder implements ILocationFinder {
 	 * Construct a new FroyoLocationFinder.
 	 * 
 	 * @param context
-	 *            for the system service and to get the main looper
+	 *            - for the system service and to get the main looper
 	 */
-	FroyoLocationFinder(Context context, OnLocationUpdateListener callback) {
-		mContext = context;
-		mCallback = callback;
-		mLocationManager = (LocationManager) context
-				.getSystemService(Context.LOCATION_SERVICE);
+	FroyoLocationFinder(final Context context,
+			final OnLocationUpdateListener callback) {
+		super(context, callback);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void oneShotUpdate(Location currentBestLocation) {
-		// the current location, for the receiver to compare it to the new one
-		mCurrentLocation = currentBestLocation;
-		// define the criteria and the best provider for the location update
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-		String provider = mLocationManager.getBestProvider(criteria, true);
-		if (provider != null) {
-			// request the location update
-			mLocationManager.requestLocationUpdates(provider, 0, 0,
-					singleUpdateListener, mContext.getMainLooper());
-		}
+	public void cancel() {
+		mLocationManager.removeUpdates(mSingleUpdateListener);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void cancel() {
-		mLocationManager.removeUpdates(singleUpdateListener);
+	@Override
+	void invokeBroadcast(final Criteria criteria) {
+		final String provider = mLocationManager
+				.getBestProvider(criteria, true);
+		if (provider != null) {
+
+			// request the location update
+			mLocationManager.requestLocationUpdates(provider, 0, 0,
+					mSingleUpdateListener, mContext.getMainLooper());
+		}
 	}
 }

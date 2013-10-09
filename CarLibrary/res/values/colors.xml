@@ -17,5 +17,5 @@
 
 <resources>
     <color name="text_carlib">#ff005761</color>    
-    <color name="background_transparent_carlib">#bbeeeeee</color>   
+    <color name="background_transparent_carlib">#cceeeeee</color>   
 </resources>

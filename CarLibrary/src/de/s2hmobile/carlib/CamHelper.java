@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 S2H Mobile
+ * Copyright (C) 2012 - 2013, S2H Mobile
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,13 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 
-public class CamHelper {
+/**
+ * Helper class, creates intent for launching camera app.
+ * 
+ * @author Stephan Hoehne
+ * 
+ */
+public final class CamHelper {
 
 	public static final int REQ_TAKE_PICTURE = 0x100;
 
@@ -37,38 +43,39 @@ public class CamHelper {
 	 * Checks if the user has opted to take pictures.
 	 * 
 	 * @param context
-	 *            the application context
-	 * @return true if taking pictures is enabled
+	 *            - the application context
+	 * 
+	 * @return True if taking pictures is enabled.
 	 */
-	public static boolean isCameraEnabled(Context context) {
-		SharedPreferences prefs = PreferenceManager
+	public static boolean isCameraEnabled(final Context context) {
+		final SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
 
 		final String key = context.getResources()
 				.getString(R.string.key_camera);
-		boolean defValue = context.getResources().getBoolean(
+		final boolean defValue = context.getResources().getBoolean(
 				R.bool.pref_camera_default);
 		return prefs.getBoolean(key, defValue);
 	}
 
-	public static Intent takePicture(Context context, File file) {
+	public static Intent takePicture(final Context context, final File file) {
+		Intent intent = null;
+
 		if (hasCamera(context)) {
-			final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
 			if (IntentHelper.isIntentSafe(context, intent)) {
 				final Uri uri = Uri.fromFile(file);
+
 				if (uri != null) {
 					intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 				}
-				return intent;
-			} else {
-				return null;
 			}
-		} else {
-			return null;
 		}
+		return intent;
 	}
 
-	private static boolean hasCamera(Context context) {
+	private static boolean hasCamera(final Context context) {
 		return context.getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_CAMERA);
 	}

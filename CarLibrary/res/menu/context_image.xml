@@ -19,9 +19,9 @@
 
     <item
         android:id="@+id/item_share"
-        android:title="@string/menu_share"/>
+        android:title="@string/context_share"/>
     <item
         android:id="@+id/item_delete"
-        android:title="@string/menu_delete"/>
+        android:title="@string/context_delete"/>
 
 </menu>

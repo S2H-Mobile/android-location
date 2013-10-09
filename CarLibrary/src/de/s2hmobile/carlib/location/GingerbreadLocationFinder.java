@@ -1,4 +1,4 @@
-/*  File modified by S2H Mobile, 2012.
+/*  File modified by S2H Mobile, 2013.
  * 
  * Copyright 2011 Google Inc.
  *
@@ -32,81 +32,77 @@ import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
  * Optimized implementation of ILocationFinder for devices running Gingerbread
  * and above.
  */
-public class GingerbreadLocationFinder implements ILocationFinder {
+public class GingerbreadLocationFinder extends LocationFinderBase {
 
-	/**
-	 * Intent action to update the user location.
-	 */
+	/** Intent action to update the user location. */
 	private static final String ACTION_UPDATE_LOCATION = GingerbreadLocationFinder.class
 			.getPackage().getName() + ".ACTION_UPDATE_LOCATION";
 
-	private final Context mContext;
-	private final LocationManager mLocationManager;
-	private final OnLocationUpdateListener mCallback;
 	private final PendingIntent mUpdateIntent;
 
-	private Location mCurrentLocation = null;
-
 	/**
-	 * This {@link BroadcastReceiver} listens for a single location update
-	 * before unregistering itself. The oneshot location update is returned via
-	 * the {@link LocationListener} specified in
-	 * {@link setChangedLocationListener}.
+	 * Listens for a single location update before unregistering itself. The
+	 * one-shot location update is returned via the {@link LocationListener}
+	 * specified in {@link setChangedLocationListener}.
 	 */
-	protected BroadcastReceiver singleUpdateReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
+
 		@Override
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(final Context context, final Intent intent) {
+
 			// release resources
-			context.unregisterReceiver(singleUpdateReceiver);
-			GingerbreadLocationFinder.this.cancel();
+			cancel();
+
 			// evaluate update
 			if (mCallback != null) {
-				String key = LocationManager.KEY_LOCATION_CHANGED;
-				Location newLocation = (Location) intent.getExtras().get(key);
-				Location betterLocation = LocationHelper.betterLocation(
-						newLocation, mCurrentLocation);
+				final String key = LocationManager.KEY_LOCATION_CHANGED;
+				final Location newLocation = (Location) intent.getExtras().get(
+						key);
+
+				// send back the better location
+				final Location betterLocation = LocationFinderBase
+						.betterLocation(newLocation, mCurrentLocation);
 				mCallback.onLocationUpdate(betterLocation);
 			}
 		}
+
 	};
 
-	/**
-	 * Construct a new GingerbreadLocationFinder.
-	 * 
-	 * @param context
-	 *            Context
-	 */
-	GingerbreadLocationFinder(Context context, OnLocationUpdateListener callback) {
-		mContext = context;
-		mCallback = callback;
-		// create the PendingIntent that will be broadcast by the oneshot update
+	GingerbreadLocationFinder(final Context context,
+			final OnLocationUpdateListener callback) {
+		super(context, callback);
+
+		// create the intent that will be broadcast by the one-shot update
 		mUpdateIntent = PendingIntent.getBroadcast(context, 0, new Intent(
 				ACTION_UPDATE_LOCATION), PendingIntent.FLAG_UPDATE_CURRENT);
-		mLocationManager = (LocationManager) context
-				.getSystemService(Context.LOCATION_SERVICE);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public void oneShotUpdate(Location currentBestLocation) {
-		// the current location, for the receiver to compare it to the new one
-		mCurrentLocation = currentBestLocation;
-		// register the receiver
-		IntentFilter filter = new IntentFilter(ACTION_UPDATE_LOCATION);
-		mContext.registerReceiver(singleUpdateReceiver, filter);
-		// define the criteria for the location update
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-		// request the location update
-		mLocationManager.requestSingleUpdate(criteria, mUpdateIntent);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public void cancel() {
 		mLocationManager.removeUpdates(mUpdateIntent);
+		mContext.unregisterReceiver(mUpdateReceiver);
+	}
+
+	@Override
+	void invokeBroadcast(final Criteria criteria) {
+
+		// register the receiver
+		final IntentFilter filter = new IntentFilter(ACTION_UPDATE_LOCATION);
+		mContext.registerReceiver(mUpdateReceiver, filter);
+
+		try {
+
+			// request the location update
+			mLocationManager.requestSingleUpdate(criteria, mUpdateIntent);
+		} catch (final IllegalArgumentException e) {
+
+			/*
+			 * Most probably, no provider was found for criteria, because user
+			 * has turned off all location sensors on the device. Release
+			 * resources by cancelling updates.
+			 */
+			cancel();
+		}
 	}
 }
