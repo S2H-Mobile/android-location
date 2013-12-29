@@ -43,9 +43,9 @@ public final class LocationData {
 	private LocationData() {
 	}
 
-	public static void clearLocationDataFile(final SharedPreferences data) {
-		data.edit().clear().commit();
-	}
+	// public static void clearLocationDataFile(final SharedPreferences data) {
+	// data.edit().clear().commit();
+	// }
 
 	/**
 	 * Returns the address of the parking spot, if one has been saved. There can
@@ -110,14 +110,14 @@ public final class LocationData {
 	 */
 	public static boolean putLocation(final SharedPreferences data,
 			final Location location) {
-		if (location != null) {
-			final double lat = location.getLatitude(), lng = location
-					.getLongitude();
-			final long time = location.getTime();
-			return putPosition(data, lat, lng) && putTime(data, time);
-		} else {
+		if (location == null) {
 			return false;
 		}
+
+		final double lat = location.getLatitude();
+		final double lng = location.getLongitude();
+		final long time = location.getTime();
+		return putPosition(data, lat, lng) && putTime(data, time);
 	}
 
 	public static boolean putPosition(final SharedPreferences data,

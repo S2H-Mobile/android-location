@@ -34,19 +34,19 @@ public final class IntentHelper {
 	static enum RoutingOptions {
 		GENERIC(0, "geo:%1$f,%2$f") {
 			@Override
-			Intent getIntent(double lat, double lng) {
+			Intent getIntent(final double lat, final double lng) {
 				return buildIntent(getPattern(), lat, lng);
 			}
 		},
 		GOOGLE(1, "google.navigation:q=%1$f,%2$f") {
 			@Override
-			Intent getIntent(double lat, double lng) {
+			Intent getIntent(final double lat, final double lng) {
 				return buildIntent(getPattern(), lat, lng);
 			}
 		},
 		NAVIGON(3, "android.intent.action.navigon.START_PUBLIC") {
 			@Override
-			Intent getIntent(double lat, double lng) {
+			Intent getIntent(final double lat, final double lng) {
 				final Intent intent = new Intent(getPattern());
 				intent.putExtra("latitude", (float) lat);
 				intent.putExtra("longitude", (float) lng);
@@ -55,7 +55,7 @@ public final class IntentHelper {
 		},
 		WAZE(2, "waze://?ll=%1$f,%2$f") {
 			@Override
-			Intent getIntent(double lat, double lng) {
+			Intent getIntent(final double lat, final double lng) {
 				return buildIntent(getPattern(), lat, lng);
 			}
 		};
@@ -65,7 +65,7 @@ public final class IntentHelper {
 
 		private final String mPattern;
 
-		private RoutingOptions(int index, String pattern) {
+		private RoutingOptions(final int index, final String pattern) {
 			mIndex = index;
 			mPattern = pattern;
 		}
@@ -74,14 +74,14 @@ public final class IntentHelper {
 			return mIndex;
 		}
 
-		abstract Intent getIntent(double lat, double lng);
+		abstract Intent getIntent(final double lat, final double lng);
 
 		String getPattern() {
 			return mPattern;
 		}
 
-		private static final Intent buildIntent(String pattern, double lat,
-				double lng) {
+		private static final Intent buildIntent(final String pattern,
+				final double lat, final double lng) {
 			final String data = String.format(Locale.US, pattern, lat, lng);
 			return new Intent(Intent.ACTION_VIEW, Uri.parse(data));
 		}
@@ -112,7 +112,7 @@ public final class IntentHelper {
 
 		// select the appropriate intent
 		Intent intent = null;
-		for (RoutingOptions selectedOption : RoutingOptions.values()) {
+		for (final RoutingOptions selectedOption : RoutingOptions.values()) {
 			if (index == selectedOption.getIndex()) {
 				intent = selectedOption.getIntent(lat, lng);
 			}
@@ -158,7 +158,7 @@ public final class IntentHelper {
 	 * @param packageName
 	 *            - the package name of the app to launch
 	 */
-	public static final void launchApp(Context context, String packageName) {
+	public static void launchApp(final Context context, final String packageName) {
 		final PackageManager pm = context.getPackageManager();
 
 		// check if app is installed
@@ -168,11 +168,12 @@ public final class IntentHelper {
 			final Intent intent = pm.getLaunchIntentForPackage(packageName);
 			addFlags(intent);
 			context.startActivity(intent);
-		} else {
-
-			// launch the Google Play detail page
-			IntentHelper.launchGooglePlay(context, packageName);
+			return;
 		}
+
+		// launch the Google Play detail page
+		IntentHelper.launchGooglePlay(context, packageName);
+
 	}
 
 	/**
@@ -183,8 +184,8 @@ public final class IntentHelper {
 	 * @param packageName
 	 *            - the package name of the app
 	 */
-	public static final void launchGooglePlay(Context context,
-			String packageName) {
+	public static final void launchGooglePlay(final Context context,
+			final String packageName) {
 
 		// start building the Uri by appending the package name as parameter
 		final Uri.Builder builder = new Uri.Builder().appendQueryParameter(
@@ -244,12 +245,12 @@ public final class IntentHelper {
 	 *            - the name of the package
 	 * @return true if package is installed
 	 */
-	private static final boolean isInstalled(PackageManager pm,
-			String packageName) {
+	private static final boolean isInstalled(final PackageManager pm,
+			final String packageName) {
 		try {
 			pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
 			return true;
-		} catch (PackageManager.NameNotFoundException e) {
+		} catch (final PackageManager.NameNotFoundException e) {
 			return false;
 		}
 	}
@@ -263,7 +264,7 @@ public final class IntentHelper {
 	 *            as Uri parameter
 	 * @return The intent including the Uri data.
 	 */
-	private static final Intent openGooglePlayApp(Uri.Builder builder) {
+	private static final Intent openGooglePlayApp(final Uri.Builder builder) {
 		final Uri uri = builder.scheme("market").authority("details").build();
 		return new Intent(Intent.ACTION_VIEW, uri);
 	}
@@ -277,7 +278,7 @@ public final class IntentHelper {
 	 *            as Uri parameter
 	 * @return The intent including the Uri data.
 	 */
-	private static final Intent openGooglePlayBrowser(Uri.Builder builder) {
+	private static final Intent openGooglePlayBrowser(final Uri.Builder builder) {
 		final Uri uri = builder.scheme("http").authority("play.google.com")
 				.appendEncodedPath("store/apps/details").build();
 		return new Intent(Intent.ACTION_VIEW, uri);
