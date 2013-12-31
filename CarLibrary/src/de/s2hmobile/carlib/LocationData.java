@@ -26,7 +26,7 @@ import android.location.Location;
  */
 public final class LocationData {
 
-	private static final long DEFAULT_TIME = Long.MIN_VALUE;
+	// private static final long DEFAULT_TIME = Long.MIN_VALUE;
 
 	/** Key for saving the address of the car loaction in the data file. */
 	private static final String KEY_ADDRESS = "pref_address";
@@ -43,10 +43,6 @@ public final class LocationData {
 	private LocationData() {
 	}
 
-	// public static void clearLocationDataFile(final SharedPreferences data) {
-	// data.edit().clear().commit();
-	// }
-
 	/**
 	 * Returns the address of the parking spot, if one has been saved. There can
 	 * be a saved location without an address.
@@ -56,7 +52,7 @@ public final class LocationData {
 	 * @return the saved address, or an empty string
 	 */
 	public static String getAddress(final SharedPreferences data) {
-		return data.getString(LocationData.KEY_ADDRESS, "");
+		return data.getString(LocationData.KEY_ADDRESS, null);
 	}
 
 	/**
@@ -69,8 +65,12 @@ public final class LocationData {
 	public static Double[] getPosition(final SharedPreferences data) {
 
 		// read coordinates from data file
-		final long lat = data.getLong(KEY_LAT, 0L);
-		final long lng = data.getLong(KEY_LNG, 0L);
+		final long lat = data.getLong(KEY_LAT, Long.MIN_VALUE);
+		final long lng = data.getLong(KEY_LNG, Long.MIN_VALUE);
+
+		if (lat == Long.MIN_VALUE || lng == Long.MIN_VALUE) {
+			return null;
+		}
 
 		// convert to double and initialize the array
 		final double latitude = Double.longBitsToDouble(lat);
@@ -81,7 +81,7 @@ public final class LocationData {
 	}
 
 	public static long getTime(final SharedPreferences data) {
-		return data.getLong(KEY_TIME, DEFAULT_TIME);
+		return data.getLong(KEY_TIME, Long.MIN_VALUE);
 	}
 
 	/**
@@ -91,23 +91,15 @@ public final class LocationData {
 	 *            - the location data file
 	 * @return True if a saved location exists, false otherwise.
 	 */
-	public static boolean isLocationSaved(final SharedPreferences data) {
-		return getTime(data) != DEFAULT_TIME;
-	}
+	// public static boolean isLocationSaved(final SharedPreferences data) {
+	// return getTime(data) != DEFAULT_TIME;
+	// }
 
 	public static void putAddress(final SharedPreferences data,
 			final String address) {
 		data.edit().putString(KEY_ADDRESS, address).commit();
 	}
 
-	/**
-	 * Updates the location data stored in the data file.
-	 * 
-	 * @param context
-	 * @param location
-	 *            the new location
-	 * @return true if refreshed successfully
-	 */
 	public static boolean putLocation(final SharedPreferences data,
 			final Location location) {
 		if (location == null) {
