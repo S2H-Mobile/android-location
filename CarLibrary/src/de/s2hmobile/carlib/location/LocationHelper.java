@@ -118,7 +118,7 @@ public final class LocationHelper {
 	 */
 	private static Location getLastBestLocation(final Context context,
 			final long minTime) {
-		Location bestResult = null;
+		Location bestLocation = null;
 		float bestAccuracy = Float.MAX_VALUE;
 		long bestTime = Long.MIN_VALUE;
 		final LocationManager locationManager = (LocationManager) context
@@ -132,9 +132,10 @@ public final class LocationHelper {
 				final float accuracy = location.getAccuracy();
 				final long time = location.getTime();
 				if (minTime < time && accuracy < bestAccuracy) {
+
 					// This location fix is younger than minTime, its accuracy
 					// is better than the current best value.
-					bestResult = location;
+					bestLocation = location;
 					bestAccuracy = accuracy;
 					bestTime = time;
 				} else if (time < minTime && bestAccuracy == Float.MAX_VALUE
@@ -142,7 +143,7 @@ public final class LocationHelper {
 
 					// first condition not met so far, this candidate is older
 					// than minTime but younger than current bestResult
-					bestResult = location;
+					bestLocation = location;
 
 					// accuracy not updated, so the condition can be met by the
 					// next candidate
@@ -150,7 +151,7 @@ public final class LocationHelper {
 				}
 			}
 		}
-		return bestResult;
+		return bestLocation;
 	}
 
 	/**
@@ -166,19 +167,17 @@ public final class LocationHelper {
 	 */
 	private static boolean isLocationAccepted(final Location location,
 			final long limit) {
-		if (location != null) {
-
-			/*
-			 * Location.getTime() and System.currentTimeMillis() both use UTC
-			 * time which can jump. For API Level 17, use
-			 * Location.getElapsedRealtimeNanos() and
-			 * System.elapsedRealtimeNanos().
-			 */
-			final long time = location.getTime();
-			final float accuracy = location.getAccuracy();
-			return limit < time && accuracy < ALLOWED_ACCURACY_DELTA;
-		} else {
+		if (location == null) {
 			return false;
 		}
+
+		/*
+		 * Location.getTime() and System.currentTimeMillis() both use UTC time
+		 * which can jump. For API Level 17, use
+		 * Location.getElapsedRealtimeNanos() and System.elapsedRealtimeNanos().
+		 */
+		final long time = location.getTime();
+		final float accuracy = location.getAccuracy();
+		return limit < time && accuracy < ALLOWED_ACCURACY_DELTA;
 	}
 }

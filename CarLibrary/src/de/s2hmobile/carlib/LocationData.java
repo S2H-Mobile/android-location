@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013, S2H Mobile
+ * Copyright (C) 2012 - 2014, S2H Mobile
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,21 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 /**
- * Provides static access to a data file containing a location.
+ * Provides static access to a preferences file containing the location data.
  * 
  * @author Stephan Hoehne
  */
 public final class LocationData {
 
-	// private static final long DEFAULT_TIME = Long.MIN_VALUE;
-
-	/** Key for saving the address of the car loaction in the data file. */
+	/**
+	 * Key for saving the address associated with the location in the data file.
+	 */
 	private static final String KEY_ADDRESS = "pref_address";
 
-	/** Key for saving the latitude of the car location in the data file. */
+	/** Key for saving the latitude in the data file. */
 	private static final String KEY_LAT = "pref_lat";
 
-	/** Key for saving the longitude of the car location in the data file. */
+	/** Key for saving the longitude in the data file. */
 	private static final String KEY_LNG = "pref_lng";
 
 	/** Key for saving the timestamp in the data file. */
@@ -44,22 +44,22 @@ public final class LocationData {
 	}
 
 	/**
-	 * Returns the address of the parking spot, if one has been saved. There can
-	 * be a saved location without an address.
+	 * Returns the address of the location, if one has been saved. There can be
+	 * a saved location without an address.
 	 * 
 	 * @param data
-	 *            the location data file
-	 * @return the saved address, or an empty string
+	 *            - the location data file
+	 * @return The stored address string, or null.
 	 */
 	public static String getAddress(final SharedPreferences data) {
 		return data.getString(LocationData.KEY_ADDRESS, null);
 	}
 
 	/**
-	 * Reads the location data from the preferences file.
+	 * Reads the coordinates of the stored location from the preferences file.
 	 * 
 	 * @param data
-	 *            - the location data file
+	 *            - the file
 	 * @return The coordinate array or (0,0) if nothing has been saved.
 	 */
 	public static Double[] getPosition(final SharedPreferences data) {
@@ -83,17 +83,6 @@ public final class LocationData {
 	public static long getTime(final SharedPreferences data) {
 		return data.getLong(KEY_TIME, Long.MIN_VALUE);
 	}
-
-	/**
-	 * Checks if a location is saved.
-	 * 
-	 * @param data
-	 *            - the location data file
-	 * @return True if a saved location exists, false otherwise.
-	 */
-	// public static boolean isLocationSaved(final SharedPreferences data) {
-	// return getTime(data) != DEFAULT_TIME;
-	// }
 
 	public static void putAddress(final SharedPreferences data,
 			final String address) {

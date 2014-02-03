@@ -59,24 +59,21 @@ public final class CamHelper {
 	}
 
 	public static Intent takePicture(final Context context, final File file) {
-		Intent intent = null;
-
-		if (hasCamera(context)) {
-			intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-			if (IntentHelper.isIntentSafe(context, intent)) {
-				final Uri uri = Uri.fromFile(file);
-
-				if (uri != null) {
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-				}
-			}
+		final PackageManager pm = context.getPackageManager();
+		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+			return null;
 		}
-		return intent;
-	}
 
-	private static boolean hasCamera(final Context context) {
-		return context.getPackageManager().hasSystemFeature(
-				PackageManager.FEATURE_CAMERA);
+		final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		if (!IntentHelper.isIntentSafe(context, intent)) {
+			return null;
+		}
+
+		final Uri uri = Uri.fromFile(file);
+		if (uri != null) {
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+		}
+
+		return intent;
 	}
 }
