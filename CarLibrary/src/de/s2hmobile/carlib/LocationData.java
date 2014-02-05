@@ -16,11 +16,13 @@
 
 package de.s2hmobile.carlib;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
 /**
- * Provides static access to a preferences file containing the location data.
+ * Singleton that provides static access to a preferences file containing the
+ * location data.
  * 
  * @author Stephan Hoehne
  */
@@ -40,7 +42,18 @@ public final class LocationData {
 	/** Key for saving the timestamp in the data file. */
 	private static final String KEY_TIME = "pref_time";
 
-	private LocationData() {
+	/** The file name to be appended to the package name. */
+	private static final String FILE_NAME = ".LOCATION_DATA";
+
+	private final SharedPreferences mFile;
+
+	private static LocationData instance = null;
+
+	private LocationData(final Context context) {
+		final Context appContext = context.getApplicationContext();
+		final String name = appContext.getApplicationInfo().packageName
+				+ FILE_NAME;
+		mFile = appContext.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 
 	/**
@@ -51,8 +64,8 @@ public final class LocationData {
 	 *            - the location data file
 	 * @return The stored address string, or null.
 	 */
-	public static String getAddress(final SharedPreferences data) {
-		return data.getString(LocationData.KEY_ADDRESS, null);
+	public String getAddress() {
+		return mFile.getString(LocationData.KEY_ADDRESS, null);
 	}
 
 	/**
@@ -62,11 +75,11 @@ public final class LocationData {
 	 *            - the file
 	 * @return The coordinate array or (0,0) if nothing has been saved.
 	 */
-	public static Double[] getPosition(final SharedPreferences data) {
+	public Double[] getPosition() {
 
 		// read coordinates from data file
-		final long lat = data.getLong(KEY_LAT, Long.MIN_VALUE);
-		final long lng = data.getLong(KEY_LNG, Long.MIN_VALUE);
+		final long lat = mFile.getLong(KEY_LAT, Long.MIN_VALUE);
+		final long lng = mFile.getLong(KEY_LNG, Long.MIN_VALUE);
 
 		if (lat == Long.MIN_VALUE || lng == Long.MIN_VALUE) {
 			return null;
@@ -80,17 +93,15 @@ public final class LocationData {
 		return coordinates;
 	}
 
-	public static long getTime(final SharedPreferences data) {
-		return data.getLong(KEY_TIME, Long.MIN_VALUE);
+	public long getTime() {
+		return mFile.getLong(KEY_TIME, Long.MIN_VALUE);
 	}
 
-	public static void putAddress(final SharedPreferences data,
-			final String address) {
-		data.edit().putString(KEY_ADDRESS, address).commit();
+	public void putAddress(final String address) {
+		mFile.edit().putString(KEY_ADDRESS, address).commit();
 	}
 
-	public static boolean putLocation(final SharedPreferences data,
-			final Location location) {
+	public boolean putLocation(final Location location) {
 		if (location == null) {
 			return false;
 		}
@@ -98,17 +109,23 @@ public final class LocationData {
 		final double lat = location.getLatitude();
 		final double lng = location.getLongitude();
 		final long time = location.getTime();
-		return putPosition(data, lat, lng) && putTime(data, time);
+		return putPosition(lat, lng) && putTime(time);
 	}
 
-	public static boolean putPosition(final SharedPreferences data,
-			final double lat, final double lng) {
-		return data.edit().remove(KEY_ADDRESS)
+	public boolean putPosition(final double lat, final double lng) {
+		return mFile.edit().remove(KEY_ADDRESS)
 				.putLong(KEY_LAT, Double.doubleToLongBits(lat))
 				.putLong(KEY_LNG, Double.doubleToLongBits(lng)).commit();
 	}
 
-	private static boolean putTime(final SharedPreferences data, final long time) {
-		return data.edit().putLong(KEY_TIME, time).commit();
+	private boolean putTime(final long time) {
+		return mFile.edit().putLong(KEY_TIME, time).commit();
+	}
+
+	public static LocationData get(final Context context) {
+		if (instance == null) {
+			instance = new LocationData(context);
+		}
+		return instance;
 	}
 }
