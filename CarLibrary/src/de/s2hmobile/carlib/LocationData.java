@@ -42,6 +42,9 @@ public final class LocationData {
 	/** Key for saving the timestamp in the data file. */
 	private static final String KEY_TIME = "pref_time";
 
+	/** Key for accuracy in location data file. */
+	private static final String KEY_ACC = "data_accuracy";
+
 	/** The file name to be appended to the package name. */
 	private static final String FILE_NAME = ".LOCATION_DATA";
 
@@ -54,6 +57,14 @@ public final class LocationData {
 		final String name = appContext.getApplicationInfo().packageName
 				+ FILE_NAME;
 		mFile = appContext.getSharedPreferences(name, Context.MODE_PRIVATE);
+	}
+
+	public boolean clear() {
+		return mFile.edit().clear().commit();
+	}
+
+	public float getAccuracy() {
+		return mFile.getFloat(KEY_ACC, Float.MAX_VALUE);
 	}
 
 	/**
@@ -97,8 +108,8 @@ public final class LocationData {
 		return mFile.getLong(KEY_TIME, Long.MIN_VALUE);
 	}
 
-	public void putAddress(final String address) {
-		mFile.edit().putString(KEY_ADDRESS, address).commit();
+	public boolean putAddress(final String address) {
+		return mFile.edit().putString(KEY_ADDRESS, address).commit();
 	}
 
 	public boolean putLocation(final Location location) {
@@ -109,17 +120,16 @@ public final class LocationData {
 		final double lat = location.getLatitude();
 		final double lng = location.getLongitude();
 		final long time = location.getTime();
-		return putPosition(lat, lng) && putTime(time);
+		final float accuracy = location.getAccuracy();
+		return putPosition(lat, lng)
+				&& mFile.edit().putFloat(KEY_ACC, accuracy)
+						.putLong(KEY_TIME, time).commit();
 	}
 
 	public boolean putPosition(final double lat, final double lng) {
 		return mFile.edit().remove(KEY_ADDRESS)
 				.putLong(KEY_LAT, Double.doubleToLongBits(lat))
 				.putLong(KEY_LNG, Double.doubleToLongBits(lng)).commit();
-	}
-
-	private boolean putTime(final long time) {
-		return mFile.edit().putLong(KEY_TIME, time).commit();
 	}
 
 	public static LocationData get(final Context context) {
