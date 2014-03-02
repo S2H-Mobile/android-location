@@ -88,7 +88,7 @@ public final class LocationData {
 	 */
 	public Double[] getPosition() {
 
-		// read coordinates from data file
+		// coordinates from data file
 		final long lat = mFile.getLong(KEY_LAT, Long.MIN_VALUE);
 		final long lng = mFile.getLong(KEY_LNG, Long.MIN_VALUE);
 

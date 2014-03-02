@@ -85,7 +85,7 @@ public class GingerbreadLocationFinder extends LocationFinderBase {
 	}
 
 	@Override
-	void invokeBroadcast(final Criteria criteria) {
+	protected void invokeBroadcast(final Criteria criteria) {
 
 		// register the receiver
 		final IntentFilter filter = new IntentFilter(ACTION_UPDATE_LOCATION);

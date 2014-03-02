@@ -31,7 +31,7 @@ public class FroyoLocationFinder extends LocationFinderBase {
 	 * location update before unregistering itself. The one-off location update
 	 * is returned via the {@link LocationListener}.
 	 */
-	private final LocationListener mSingleUpdateListener = new LocationListener() {
+	private final LocationListener mListener = new LocationListener() {
 
 		@Override
 		public void onLocationChanged(final Location newLocation) {
@@ -72,23 +72,22 @@ public class FroyoLocationFinder extends LocationFinderBase {
 		super(context, callback);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void cancel() {
-		mLocationManager.removeUpdates(mSingleUpdateListener);
+		mLocationManager.removeUpdates(mListener);
 	}
 
 	@Override
-	void invokeBroadcast(final Criteria criteria) {
+	protected void invokeBroadcast(final Criteria criteria) {
 		final String provider = mLocationManager
 				.getBestProvider(criteria, true);
-		if (provider != null) {
-
-			// request the location update
-			mLocationManager.requestLocationUpdates(provider, 0, 0,
-					mSingleUpdateListener, mContext.getMainLooper());
+		if (provider == null) {
+			return;
 		}
+
+		// request the location update
+		mLocationManager.requestLocationUpdates(provider, 0, 0, mListener,
+				mContext.getMainLooper());
 	}
 }

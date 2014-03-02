@@ -99,5 +99,5 @@ abstract class LocationFinderBase implements ILocationFinder {
 		invokeBroadcast(criteria);
 	}
 
-	abstract void invokeBroadcast(final Criteria criteria);
+	protected abstract void invokeBroadcast(final Criteria criteria);
 }
