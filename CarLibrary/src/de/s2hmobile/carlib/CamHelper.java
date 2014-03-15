@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013, S2H Mobile
+ * Copyright (C) 2012 - 2014, S2H Mobile
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 
 /**
- * Helper class, creates intent for launching camera app.
+ * Checks if camera is present and creates intent for launching camera app.
  * 
  * @author Stephan Hoehne
  * 
@@ -59,6 +59,10 @@ public final class CamHelper {
 	}
 
 	public static Intent takePicture(final Context context, final File file) {
+		if (file == null) {
+			return null;
+		}
+
 		final PackageManager pm = context.getPackageManager();
 		if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
 			return null;
