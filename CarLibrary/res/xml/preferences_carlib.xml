@@ -17,11 +17,11 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     
-	<CheckBoxPreference
+	<!-- <CheckBoxPreference
         android:key="pref_camera"
         android:title="@string/camera_title"
         android:summary="@string/camera_summary"
-        android:defaultValue="@bool/pref_camera_default" />
+        android:defaultValue="@bool/pref_camera_default" /> -->
           
 	<ListPreference
         android:key="pref_routing"
