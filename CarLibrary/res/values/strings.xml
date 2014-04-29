@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2012 - 2013, S2H Mobile
+  Copyright (C) 2012 - 2014, S2H Mobile
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
     <string name="warn_location">"Can't determine current location."</string>
 
     <!-- Settings -->
-    <string name="camera_title">Take Picture</string>
-    <string name="camera_summary">Launch camera when new location is set</string>
     <string name="routing_title">Directions</string>
     <string name="routing_dialog">Directions</string>
     <string name="dialog_choose_carlib">Complete action using</string>
@@ -50,9 +48,8 @@
     <string name="edit_text_loading">Encoding address &#8230;</string>
     <string name="edit_text_input">Please enter the address.</string>
 
-    <!-- Default values -->
+    <!-- routing setting -->
     <string name="routing_default">1</string>
     <string name="key_routing">pref_routing</string>
-    <string name="key_camera">pref_camera</string>
 
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (C) 2012 - 2013, S2H Mobile
+  Copyright (C) 2012 - 2014, S2H Mobile
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
     <string name="warn_location">Aktueller Standort nicht verfügbar.</string>
 
     <!-- Settings -->
-    <string name="camera_title">Foto aufnehmen</string>
-    <string name="camera_summary">Starte Kamera beim Festlegen eines neuen Standortes</string>
     <string name="routing_title">Navigation</string>
     <string name="routing_dialog">"Bevorzugte App für Navigation"</string>
     <string name="dialog_choose_carlib">"Vorgang abschließen mit"</string>
