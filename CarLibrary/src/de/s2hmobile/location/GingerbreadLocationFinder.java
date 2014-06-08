@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package de.s2hmobile.carlib.location;
+package de.s2hmobile.location;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -26,7 +26,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
+import de.s2hmobile.location.LocationHelper.OnLocationUpdateListener;
 
 /**
  * Optimized implementation of ILocationFinder for devices running Gingerbread

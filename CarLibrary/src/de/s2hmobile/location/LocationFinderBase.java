@@ -1,11 +1,11 @@
-package de.s2hmobile.carlib.location;
+package de.s2hmobile.location;
 
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.text.format.DateUtils;
-import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
+import de.s2hmobile.location.LocationHelper.OnLocationUpdateListener;
 
 abstract class LocationFinderBase implements ILocationFinder {
 

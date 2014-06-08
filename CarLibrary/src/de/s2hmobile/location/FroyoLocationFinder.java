@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package de.s2hmobile.carlib.location;
+package de.s2hmobile.location;
 
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import de.s2hmobile.carlib.location.LocationHelper.OnLocationUpdateListener;
+import de.s2hmobile.location.LocationHelper.OnLocationUpdateListener;
 
 public class FroyoLocationFinder extends LocationFinderBase {
 

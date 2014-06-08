@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.s2hmobile.carlib;
+package de.s2hmobile.location;
 
 import android.content.Context;
 import android.content.SharedPreferences;

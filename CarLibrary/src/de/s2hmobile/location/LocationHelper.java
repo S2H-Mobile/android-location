@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.s2hmobile.carlib.location;
+package de.s2hmobile.location;
 
 import java.util.List;
 
