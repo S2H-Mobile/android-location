@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 S2H Mobile
+ * Copyright (C) 2012 - 2014, S2H Mobile
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,61 @@ public final class LocationHelper {
 	}
 
 	/**
+	 * Find the most accurate and timely previously detected location using all
+	 * the location providers. This method is derived from the Location Best
+	 * Practises project by Reto Meier.
+	 * 
+	 * @param context
+	 *            the context, to get the location manager
+	 * @param minTime
+	 *            the time limit
+	 * @return The most accurate and / or timely previously detected location.
+	 */
+	public static Location getLastBestLocation(final Context context,
+			final long minTime) {
+		Location bestLocation = null;
+		float bestAccuracy = Float.MAX_VALUE;
+		long bestTime = Long.MIN_VALUE;
+		final LocationManager locationManager = (LocationManager) context
+				.getSystemService(Context.LOCATION_SERVICE);
+		final List<String> matchingProviders = locationManager
+				.getAllProviders();
+		for (final String provider : matchingProviders) {
+			final Location location = locationManager
+					.getLastKnownLocation(provider);
+			if (location != null) {
+				final float accuracy = location.getAccuracy();
+				final long time = location.getTime();
+				if (minTime < time && accuracy < bestAccuracy) {
+
+					/*
+					 * This location fix is younger than minTime, its accuracy
+					 * is better than the current best value.
+					 */
+					bestLocation = location;
+					bestAccuracy = accuracy;
+					bestTime = time;
+				} else if (time < minTime && bestAccuracy == Float.MAX_VALUE
+						&& bestTime < time) {
+
+					/*
+					 * First condition not met, since candidate is older than
+					 * minTime but younger than current bestResult.
+					 */
+					bestLocation = location;
+
+					/*
+					 * Accuracy not updated, so the condition can be met by the
+					 * next candidate.
+					 */
+					bestTime = time;
+				}
+			}
+		}
+		return bestLocation;
+	}
+
+	/**
 	 * Checks if the caller implements the OnLocationListener interface. Asks
 	 * for the last best location. If it is not good enough, requests a single
 	 * update.
@@ -73,8 +128,7 @@ public final class LocationHelper {
 		final long limit = System.currentTimeMillis() - DEFAULT_TIME_LIMIT;
 
 		// ask for last best location
-		final Location lastBestLocation = LocationHelper.getLastBestLocation(
-				context, limit);
+		final Location lastBestLocation = getLastBestLocation(context, limit);
 
 		// evaluate the result
 		if (LocationHelper.isLocationAccepted(lastBestLocation, limit)) {
@@ -103,55 +157,6 @@ public final class LocationHelper {
 			final OnLocationUpdateListener listener) {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD ? new GingerbreadLocationFinder(
 				context, listener) : new FroyoLocationFinder(context, listener);
-	}
-
-	/**
-	 * Find the most accurate and timely previously detected location using all
-	 * the location providers. This method is derived from the Location Best
-	 * Practises project by Reto Meier.
-	 * 
-	 * @param context
-	 *            the context, to get the location manager
-	 * @param minTime
-	 *            the time limit
-	 * @return The most accurate and / or timely previously detected location.
-	 */
-	private static Location getLastBestLocation(final Context context,
-			final long minTime) {
-		Location bestLocation = null;
-		float bestAccuracy = Float.MAX_VALUE;
-		long bestTime = Long.MIN_VALUE;
-		final LocationManager locationManager = (LocationManager) context
-				.getSystemService(Context.LOCATION_SERVICE);
-		final List<String> matchingProviders = locationManager
-				.getAllProviders();
-		for (final String provider : matchingProviders) {
-			final Location location = locationManager
-					.getLastKnownLocation(provider);
-			if (location != null) {
-				final float accuracy = location.getAccuracy();
-				final long time = location.getTime();
-				if (minTime < time && accuracy < bestAccuracy) {
-
-					// This location fix is younger than minTime, its accuracy
-					// is better than the current best value.
-					bestLocation = location;
-					bestAccuracy = accuracy;
-					bestTime = time;
-				} else if (time < minTime && bestAccuracy == Float.MAX_VALUE
-						&& bestTime < time) {
-
-					// first condition not met so far, this candidate is older
-					// than minTime but younger than current bestResult
-					bestLocation = location;
-
-					// accuracy not updated, so the condition can be met by the
-					// next candidate
-					bestTime = time;
-				}
-			}
-		}
-		return bestLocation;
 	}
 
 	/**
