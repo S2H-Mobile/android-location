@@ -160,7 +160,7 @@ public final class LocationHelper {
 	}
 
 	/**
-	 * Evalutes the quality of the location based on its age and accuracy. The
+	 * Evaluates the quality of the location based on its age and accuracy. The
 	 * criteria are defined as constants. The time limit should be determined
 	 * using the basic equation limit = now - age.
 	 * 
